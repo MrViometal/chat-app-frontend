@@ -18,10 +18,12 @@ const Chat = (props) => {
 
     setName(name);
     setRoom(room);
-    console.log(socket);
+
+    socket.emit('join', { name, room }, () => {});
 
     return () => {
-      console.log('hi');
+      socket.emit('disconnect');
+      socket.off();
     };
   }, [ENDPOINT, location.search]);
   return <div>Chat</div>;
