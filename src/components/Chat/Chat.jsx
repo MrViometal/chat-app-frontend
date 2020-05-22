@@ -7,10 +7,14 @@ let socket;
 const Chat = (props) => {
   const [name, setName] = useState('');
   const [room, setRoom] = useState('');
+  const [msg, setMsg] = useState('');
+  const [messages, setMessages] = useState([]);
+
   const ENDPOINT = 'localhost:5000';
 
   const { location } = props;
 
+  //watching changes for user, room, and Port
   useEffect(() => {
     const { name, room } = queryString.parse(location.search);
 
@@ -26,7 +30,35 @@ const Chat = (props) => {
       socket.off();
     };
   }, [ENDPOINT, location.search]);
-  return <div>Chat</div>;
+
+  //watching changes for new message coming
+  useEffect(() => {
+    socket.on('message', (newMessage) => {
+      setMessages([...messages, newMessage]);
+    });
+  }, [messages]);
+
+  const sendMessage = (event) => {
+    event.preventDefault();
+    if (msg) {
+      socket.emit('sendMessage', msg, () => setMsg(''));
+    }
+  };
+
+  console.log({ msg, messages });
+
+  return (
+    <div className='outerContainer'>
+      <div className='container'>
+        <input
+          value={msg}
+          onChange={(e) => setMsg(e.target.value)}
+          onKeyPress={(e) => (e.key === 'Enter' ? sendMessage(e) : null)}
+          type='text'
+        />
+      </div>
+    </div>
+  );
 };
 
 export default Chat;
