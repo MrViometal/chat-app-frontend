@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import queryString from 'query-string';
 import io from 'socket.io-client';
 
+import './Chat.css';
+
 let socket;
 
 const Chat = (props) => {
@@ -54,7 +56,6 @@ const Chat = (props) => {
           value={msg}
           onChange={(e) => setMsg(e.target.value)}
           onKeyPress={(e) => (e.key === 'Enter' ? sendMessage(e) : null)}
-          type='text'
         />
       </div>
     </div>
