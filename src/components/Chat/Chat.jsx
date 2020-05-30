@@ -57,7 +57,7 @@ const Chat = (props) => {
     <div className='outerContainer'>
       <div className='container'>
         <InfoBar room={room} />
-        <Messages/>
+        <Messages messages={messages} name={name} />
         <Input msg={msg} setMsg={setMsg} sendMessage={sendMessage} />
 
         {/* <input
