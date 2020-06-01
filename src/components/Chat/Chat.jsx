@@ -37,8 +37,11 @@ const Chat = (props) => {
 
   //watching changes for new message coming
   useEffect(() => {
-    socket.on('newMessage', (newMessage) => {
-      setMessages([...messages, newMessage]);
+    socket.on('message', (newMessage) => {
+      setMessages((messages) => [...messages, newMessage]);
+    });
+    socket.on('roomData', ({ users }) => {
+      setUsers(users);
     });
   }, []);
 
