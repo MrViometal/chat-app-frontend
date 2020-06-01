@@ -7,6 +7,7 @@ import './Chat.css';
 import InfoBar from '../InfoBar/InfoBar';
 import Input from '../Input/Input';
 import Messages from '../Messages/Messages';
+import TextContainer from '../TextContainer/TextContainer';
 
 let socket;
 
@@ -15,8 +16,8 @@ const Chat = (props) => {
   const [room, setRoom] = useState('');
   const [msg, setMsg] = useState('');
   const [messages, setMessages] = useState([]);
-
-  const ENDPOINT = 'https://mrv-chat-application.herokuapp.com/';
+  const [users, setUsers] = useState([]);
+  const ENDPOINT = 'localhost:5000';
 
   const { location } = props;
 
@@ -24,15 +25,17 @@ const Chat = (props) => {
 
   useEffect(() => {
     const { name, room } = queryString.parse(location.search);
+
+    socket = io(ENDPOINT);
+
     setName(name);
     setRoom(room);
-    socket = io(ENDPOINT);
-    if (room && name) socket.emit('join', { name, room }, () => {});
 
-    return () => {
-      socket.emit('disconnect');
-      socket.off();
-    };
+    socket.emit('join', { name, room }, (error) => {
+      if (error) {
+        alert(error);
+      }
+    });
   }, [ENDPOINT, location.search]);
 
   //watching changes for new message coming
@@ -41,7 +44,9 @@ const Chat = (props) => {
       setMessages((messages) => [...messages, newMessage]);
     });
     socket.on('roomData', ({ users }) => {
-      setUsers(users);
+      console.log({ users });
+
+      setUsers((user) => [...users, user]);
     });
   }, []);
 
@@ -58,15 +63,12 @@ const Chat = (props) => {
     <div className='outerContainer'>
       <div className='container'>
         <InfoBar room={room} />
-        <Messages messages={messages} name={name} />
-        <Input msg={msg} setMsg={setMsg} sendMessage={sendMessage} />
 
-        {/* <input
-          value={msg}
-          onChange={(e) => setMsg(e.target.value)}
-          onKeyPress={(e) => (e.key === 'Enter' ? sendMessage(e) : null)}
-        /> */}
+        <Messages messages={messages} name={name} />
+
+        <Input msg={msg} setMsg={setMsg} sendMessage={sendMessage} />
       </div>
+      {/* <TextContainer users={users} /> */}
     </div>
   );
 };
