@@ -21,21 +21,22 @@ const Chat = (props) => {
   const { location } = props;
 
   //watching changes for user, room, and Port
+
   useEffect(() => {
     const { name, room } = queryString.parse(location.search);
-
-    socket = io(ENDPOINT);
-
     setName(name);
     setRoom(room);
+  }, [location.search]);
 
-    socket.emit('join', { name, room }, () => {});
+  useEffect(() => {
+    socket = io(ENDPOINT);
+    if (room && name) socket.emit('join', { name, room }, () => {});
 
     return () => {
       socket.emit('disconnect');
       socket.off();
     };
-  }, [ENDPOINT, location.search]);
+  }, [ENDPOINT]);
 
   //watching changes for new message coming
   useEffect(() => {
