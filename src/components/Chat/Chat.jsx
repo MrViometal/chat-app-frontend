@@ -16,7 +16,7 @@ const Chat = (props) => {
   const [msg, setMsg] = useState('');
   const [messages, setMessages] = useState([]);
 
-  const ENDPOINT = 'localhost:5000';
+  const ENDPOINT = 'https://mrv-chat-application.herokuapp.com/';
 
   const { location } = props;
 
