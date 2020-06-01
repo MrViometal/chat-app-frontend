@@ -17,7 +17,7 @@ const Chat = (props) => {
   const [msg, setMsg] = useState('');
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
-  const INTERNAL_ENDPOINT = 'https://localhost:5000';
+  const IN_ENDPOINT = 'https://localhost:5000';
   const ENDPOINT = 'https://mrv-chat-application.herokuapp.com/';
 
   const { location } = props;
@@ -47,7 +47,7 @@ const Chat = (props) => {
     socket.on('roomData', ({ users }) => {
       console.log({ users });
 
-      setUsers((user) => [...users, user]);
+      setUsers((prevUsers) => [...prevUsers, users]);
     });
   }, []);
 
@@ -69,7 +69,7 @@ const Chat = (props) => {
 
         <Input msg={msg} setMsg={setMsg} sendMessage={sendMessage} />
       </div>
-      {/* <TextContainer users={users} /> */}
+      <TextContainer users={users} />
     </div>
   );
 };
