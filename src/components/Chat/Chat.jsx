@@ -26,9 +26,6 @@ const Chat = (props) => {
     const { name, room } = queryString.parse(location.search);
     setName(name);
     setRoom(room);
-  }, [location.search]);
-
-  useEffect(() => {
     socket = io(ENDPOINT);
     if (room && name) socket.emit('join', { name, room }, () => {});
 
@@ -36,14 +33,14 @@ const Chat = (props) => {
       socket.emit('disconnect');
       socket.off();
     };
-  }, [ENDPOINT]);
+  }, [ENDPOINT, location.search]);
 
   //watching changes for new message coming
   useEffect(() => {
-    socket.on('message', (newMessage) => {
+    socket.on('newMessage', (newMessage) => {
       setMessages([...messages, newMessage]);
     });
-  }, [messages]);
+  }, []);
 
   const sendMessage = (event) => {
     event.preventDefault();
