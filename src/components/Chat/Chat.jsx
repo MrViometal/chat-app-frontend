@@ -69,7 +69,7 @@ const Chat = (props) => {
 
         <Input msg={msg} setMsg={setMsg} sendMessage={sendMessage} />
       </div>
-      <TextContainer users={users} />
+      {/* <TextContainer users={users} /> */}
     </div>
   );
 };
